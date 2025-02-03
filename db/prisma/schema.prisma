@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  regno              String        @id
+  name               String
+  isExc              Boolean
+  role               Role          @default(Jr)
+  phno               String
+  email              String
+  authId             String
+  events             Event[]       @relation("EventAttendance")
+  scannedAttendances Attendance[]  @relation("ScannedAttendances")
+  suggestions        Suggestions[]
+
+  Attendance Attendance[]
+
+  Event Event[] @relation("poc")
+
+  Exc Exc[]
+
+  Scanners Scanners[]
+}
+
+model Event {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  from        DateTime
+  to          DateTime
+  maxCapacity Int
+  location    String
+  type        EventTypes
+  pocRegno    String
+  poc         User       @relation("poc", fields: [pocRegno], references: [regno])
+
+  attendees Attendance[] @relation("EventAttendance")
+
+  Attendance Attendance[]
+
+  Exc Exc[] @relation("ExcParticipation")
+
+  Scanners Scanners[]
+
+  User User[] @relation("EventAttendance")
+}
+
+model Suggestions {
+  id          String  @id @default(uuid())
+  title       String
+  description String
+  regno       String
+  suggested   User    @relation(fields: [regno], references: [regno])
+  isApproved  Boolean
+}
+
+model Attendance {
+  id        String  @id @default(uuid())
+  regno     String
+  scannedBy String
+  attended  Boolean
+  user      User    @relation(fields: [regno], references: [regno])
+  eventId   String
+  event     Event   @relation(fields: [eventId], references: [id])
+  scanner   User    @relation("ScannedAttendances", fields: [scannedBy], references: [regno])
+
+  Event Event[] @relation("EventAttendance")
+}
+
+model Exc {
+  regno  String  @id
+  user   User    @relation(fields: [regno], references: [regno])
+  events Event[] @relation("ExcParticipation")
+}
+
+model Scanners {
+  regno   String
+  eventId String
+  from    DateTime
+  to      DateTime
+  user    User     @relation(fields: [regno], references: [regno])
+  event   Event    @relation(fields: [eventId], references: [id])
+
+  @@id([regno, eventId])
+}
+
+enum Role {
+  Board
+  Sr
+  Jr
+}
+
+enum EventTypes {
+  Workshop
+  Webinar
+  Hackathon
+  Conference
+  Meetup
+  Other
+}
