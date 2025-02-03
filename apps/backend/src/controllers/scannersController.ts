@@ -83,3 +83,21 @@ export const deleteScanner = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to delete scanner' });
     }
 };
+
+export const scanId = async (req: Request, res: Response) => { 
+    const { regno, eventId,scannedBy } = req.body;
+    try {
+        
+        const newScan = await prisma.attendance.create({
+            data: {
+                regno,
+                eventId,
+                attended: true,
+                scannedBy,
+            },
+        });
+        res.status(201).json(newScan);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to scan' });
+    }
+}
