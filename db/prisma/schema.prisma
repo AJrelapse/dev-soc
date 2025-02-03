@@ -16,7 +16,7 @@ model User {
   email              String
   authId             String
 
-  events             Event[]       @relation("EventAttendance")
+  eventsScan         Event[]       @relation("EventAttendance")
   scannedAttendances Attendance[]  @relation("ScannedAttendances")
   suggestions        Suggestions[]
   exc               Exc?
@@ -25,7 +25,7 @@ model User {
   receivedChats     chats[]        @relation("Receiver")
 
   Event Event[]
-
+  events Event[] @relation("ExcParticipation")
   Attendance Attendance[]
 
   ChatGroupMember ChatGroupMember[]
@@ -52,6 +52,8 @@ model Event {
   Attendance Attendance[]
 
   User User[] @relation("EventAttendance")
+
+  User User[] @relation("ExcParticipation")
 }
 
 model Suggestions {
@@ -79,7 +81,6 @@ model Attendance {
 model Exc {
   regno  String  @id
   user   User    @relation(fields: [regno], references: [regno])
-  events Event[] @relation("ExcParticipation")
 }
 
 model Scanners {
