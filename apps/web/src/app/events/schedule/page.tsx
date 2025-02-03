@@ -52,28 +52,32 @@ const CalendarPage = () => {
 
       <Breadcrumb pageName="Schedule" />
 
-      <div className="max-w-5xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
+      <div className="mx-auto mt-8 max-w-5xl rounded-lg bg-white p-6 shadow-md transition dark:bg-dark-2">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* From Date & To Date on the same line */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="font-semibold">From Date</label>
+              <label className="font-semibold dark:text-gray-200">
+                From Date
+              </label>
               <input
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
                 required
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-dark-3 dark:text-gray-200"
               />
             </div>
             <div>
-              <label className="font-semibold">To Date</label>
+              <label className="font-semibold dark:text-gray-200">
+                To Date
+              </label>
               <input
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
                 required
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-dark-3 dark:text-gray-200"
               />
             </div>
           </div>
@@ -84,18 +88,18 @@ const CalendarPage = () => {
             onChange={(e) => setEventTitle(e.target.value)}
             placeholder="Event Title"
             required
-            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-dark-3 dark:text-gray-200"
           />
           <textarea
             value={eventDescription}
             onChange={(e) => setEventDescription(e.target.value)}
             placeholder="Event Description"
             required
-            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-dark-3 dark:text-gray-200"
           />
           <button
             type="submit"
-            className="p-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+            className="rounded-md bg-primary p-2 text-white transition hover:bg-primary-dark"
           >
             Add Event
           </button>
@@ -104,12 +108,18 @@ const CalendarPage = () => {
         {/* Displaying Fetched Events */}
         <div className="mt-6 space-y-4">
           {events.map((event, index) => (
-            <div key={index} className="p-4 bg-gray-100 rounded-md shadow">
+            <div
+              key={index}
+              className="rounded-md bg-gray-100 p-4 shadow dark:bg-dark-3 dark:text-gray-200"
+            >
               <h3 className="text-lg font-semibold">
-                {new Date(event.from).toLocaleDateString()} - {new Date(event.to).toLocaleDateString()}
+                {new Date(event.from).toLocaleDateString()} -{" "}
+                {new Date(event.to).toLocaleDateString()}
               </h3>
               <h4 className="text-md font-medium">{event.title}</h4>
-              <p className="text-gray-700">{event.description}</p>
+              <p className="text-gray-700 dark:text-gray-300">
+                {event.description}
+              </p>
             </div>
           ))}
         </div>

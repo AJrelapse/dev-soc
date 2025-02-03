@@ -18,7 +18,11 @@ const config: Config = {
         current: "currentColor",
         transparent: "transparent",
         white: "#FFFFFF",
-        primary: "#5750F1",
+        primary: {
+          DEFAULT: "#0B8FAC", // Main primary color
+          light: "#DDF3F0",   // Lighter shade
+          dark: "#0B414C",    // Darker shade
+        },
         stroke: "#E6EBF1",
         "stroke-dark": "#27303E",
         dark: {
@@ -45,56 +49,27 @@ const config: Config = {
         green: {
           DEFAULT: "#22AD5C",
           dark: "#1A8245",
-          light: {
-            DEFAULT: "#2CD673",
-            1: "#10B981",
-            2: "#57DE8F",
-            3: "#82E6AC",
-            4: "#ACEFC8",
-            5: "#C2F3D6",
-            6: "#DAF8E6",
-            7: "#E9FBF0",
-          },
+          light: "#2CD673",
         },
         red: {
           DEFAULT: "#F23030",
           dark: "#E10E0E",
-          light: {
-            DEFAULT: "#F56060",
-            2: "#F89090",
-            3: "#FBC0C0",
-            4: "#FDD8D8",
-            5: "#FEEBEB",
-            6: "#FEF3F3",
-          },
+          light: "#F56060",
         },
         blue: {
           DEFAULT: "#3C50E0",
           dark: "#1C3FB7",
-          light: {
-            DEFAULT: "#5475E5",
-            2: "#8099EC",
-            3: "#ADBCF2",
-            4: "#C3CEF6",
-            5: "#E1E8FF",
-          },
+          light: "#5475E5",
         },
         orange: {
-          light: {
-            DEFAULT: "#F59460",
-          },
+          light: "#F59460",
         },
         yellow: {
-          dark: {
-            DEFAULT: "#F59E0B",
-            2: "#D97706",
-          },
-          light: {
-            DEFAULT: "#FCD34D",
-            4: "#FFFBEB",
-          },
+          dark: "#F59E0B",
+          light: "#FCD34D",
         },
       },
+      
       fontSize: {
         "heading-1": ["60px", "72px"],
         "heading-2": ["48px", "58px"],
