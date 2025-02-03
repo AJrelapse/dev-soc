@@ -15,17 +15,22 @@ model User {
   phno               String
   email              String
   authId             String
+
   events             Event[]       @relation("EventAttendance")
   scannedAttendances Attendance[]  @relation("ScannedAttendances")
   suggestions        Suggestions[]
+  exc               Exc?
+  scanners          Scanners[]
+  sentChats         chats[]        @relation("Sender")
+  receivedChats     chats[]        @relation("Receiver")
+
+  Event Event[]
 
   Attendance Attendance[]
 
-  Event Event[] @relation("poc")
+  ChatGroupMember ChatGroupMember[]
 
-  Exc Exc[]
-
-  Scanners Scanners[]
+  ChatGroup ChatGroup[]
 }
 
 model Event {
@@ -38,15 +43,13 @@ model Event {
   location    String
   type        EventTypes
   pocRegno    String
-  poc         User       @relation("poc", fields: [pocRegno], references: [regno])
+  poc         User       @relation(fields: [pocRegno], references: [regno])
 
-  attendees Attendance[] @relation("EventAttendance")
+  attendees   Attendance[] @relation("EventAttendance")
+  excEvents   Exc[]        @relation("ExcParticipation")
+  scanners    Scanners[]
 
   Attendance Attendance[]
-
-  Exc Exc[] @relation("ExcParticipation")
-
-  Scanners Scanners[]
 
   User User[] @relation("EventAttendance")
 }
@@ -90,6 +93,48 @@ model Scanners {
   @@id([regno, eventId])
 }
 
+model chats {
+  message_id   String   @id @default(uuid())
+  sender       String
+  receiver     String?  
+  chatGroupId  String?  
+  message      String[]
+  time         DateTime @default(now())
+  is_sent      Boolean?
+  chatType     ChatType
+
+  senderUser   User      @relation("Sender", fields: [sender], references: [regno])
+  receiverUser User?     @relation("Receiver", fields: [receiver], references: [regno])
+  chatGroup    ChatGroup? @relation(fields: [chatGroupId], references: [id])
+
+  @@index([receiver])
+  @@index([chatGroupId])
+}
+
+model ChatGroup {
+  id         String             @id @default(uuid())
+  name       String
+  createdBy  String
+  createdByUser User            @relation(fields: [createdBy], references: [regno])
+  messages   chats[]
+  members    ChatGroupMember[]
+
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+}
+
+model ChatGroupMember {
+  id          String   @id @default(uuid())
+  userId      String
+  groupId     String
+  user        User     @relation(fields: [userId], references: [regno])
+  group       ChatGroup @relation(fields: [groupId], references: [id])
+
+  joinedAt    DateTime @default(now())
+
+  @@unique([userId, groupId])
+}
+
 enum Role {
   Board
   Sr
@@ -103,4 +148,9 @@ enum EventTypes {
   Conference
   Meetup
   Other
+}
+
+enum ChatType {
+  PRIVATE
+  GROUP
 }
