@@ -23,6 +23,10 @@ export default function Signup() {
     console.log("Signup Data:", formData);
   };
 
+  const handleClick = () => {
+    console.log("hi");
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Name Field */}
@@ -100,6 +104,7 @@ export default function Signup() {
       {/* Submit Button */}
       <button
         type="submit"
+        onClick={handleClick}
         className="w-full rounded-lg bg-blue-600 py-2 text-white hover:bg-blue-700"
       >
         Sign Up
