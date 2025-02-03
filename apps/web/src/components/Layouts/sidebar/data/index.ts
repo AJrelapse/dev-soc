@@ -44,7 +44,7 @@ export const NAV_DATA = [
         items: [
           {
             title: "Schedule",
-            url: "",
+            url: "/events/schedule",
           },
           {
             title: "Registrations",
