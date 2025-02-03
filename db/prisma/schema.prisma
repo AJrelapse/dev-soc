@@ -8,25 +8,25 @@ datasource db {
 }
 
 model User {
-  regno              String        @id
-  name               String
-  isExc              Boolean
-  role               Role          @default(Jr)
-  phno               String
-  email              String
-  authId             String
+  regno  String?  @unique
+  name   String?
+  isExc  Boolean @default(false)
+  role   Role    @default(Jr)
+  phno   String?
+  email  String?
+  authId String   @id
 
   eventsScan         Event[]       @relation("EventAttendance")
   scannedAttendances Attendance[]  @relation("ScannedAttendances")
   suggestions        Suggestions[]
-  exc               Exc?
-  scanners          Scanners[]
-  sentChats         chats[]        @relation("Sender")
-  receivedChats     chats[]        @relation("Receiver")
+  exc                Exc?
+  scanners           Scanners[]
+  sentChats          chats[]       @relation("Sender")
+  receivedChats      chats[]       @relation("Receiver")
 
-  Event Event[]
-  events Event[] @relation("ExcParticipation")
-  Attendance Attendance[]
+  Event              Event[]
+  ParticipatedEvents Event[]      @relation("ExcParticipation")
+  Attendance         Attendance[]
 
   ChatGroupMember ChatGroupMember[]
 
@@ -45,15 +45,15 @@ model Event {
   pocRegno    String
   poc         User       @relation(fields: [pocRegno], references: [regno])
 
-  attendees   Attendance[] @relation("EventAttendance")
-  excEvents   Exc[]        @relation("ExcParticipation")
-  scanners    Scanners[]
+  attendees Attendance[] @relation("EventAttendance")
+  excEvents Exc[]        @relation("ExcParticipation")
+  scanners  Scanners[]
 
   Attendance Attendance[]
 
-  User User[] @relation("EventAttendance")
+  UserTakingAttendance User[] @relation("EventAttendance")
 
-  User User[] @relation("ExcParticipation")
+  ExcUser User[] @relation("ExcParticipation")
 }
 
 model Suggestions {
@@ -79,8 +79,10 @@ model Attendance {
 }
 
 model Exc {
-  regno  String  @id
-  user   User    @relation(fields: [regno], references: [regno])
+  regno String @id
+  user  User   @relation(fields: [regno], references: [regno])
+
+  Event Event[] @relation("ExcParticipation")
 }
 
 model Scanners {
@@ -95,17 +97,17 @@ model Scanners {
 }
 
 model chats {
-  message_id   String   @id @default(uuid())
-  sender       String
-  receiver     String?  
-  chatGroupId  String?  
-  message      String[]
-  time         DateTime @default(now())
-  is_sent      Boolean?
-  chatType     ChatType
+  message_id  String   @id @default(uuid())
+  sender      String
+  receiver    String?
+  chatGroupId String?
+  message     String[]
+  time        DateTime @default(now())
+  is_sent     Boolean?
+  chatType    ChatType
 
-  senderUser   User      @relation("Sender", fields: [sender], references: [regno])
-  receiverUser User?     @relation("Receiver", fields: [receiver], references: [regno])
+  senderUser   User       @relation("Sender", fields: [sender], references: [regno])
+  receiverUser User?      @relation("Receiver", fields: [receiver], references: [regno])
   chatGroup    ChatGroup? @relation(fields: [chatGroupId], references: [id])
 
   @@index([receiver])
@@ -113,25 +115,26 @@ model chats {
 }
 
 model ChatGroup {
-  id         String             @id @default(uuid())
-  name       String
-  createdBy  String
-  createdByUser User            @relation(fields: [createdBy], references: [regno])
-  messages   chats[]
-  members    ChatGroupMember[]
+  id            String            @id @default(uuid())
+  name          String
+  createdBy     String
+  isAdmin       Boolean
+  createdByUser User              @relation(fields: [createdBy], references: [regno])
+  messages      chats[]
+  members       ChatGroupMember[]
 
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ChatGroupMember {
-  id          String   @id @default(uuid())
-  userId      String
-  groupId     String
-  user        User     @relation(fields: [userId], references: [regno])
-  group       ChatGroup @relation(fields: [groupId], references: [id])
+  id      String    @id @default(uuid())
+  userId  String
+  groupId String
+  user    User      @relation(fields: [userId], references: [regno])
+  group   ChatGroup @relation(fields: [groupId], references: [id])
 
-  joinedAt    DateTime @default(now())
+  joinedAt DateTime @default(now())
 
   @@unique([userId, groupId])
 }
