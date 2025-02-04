@@ -16,7 +16,7 @@ const Chart = dynamic(() => import("react-apexcharts"), {
 
 export function EventRegistrationsChart({ data }: PropsType) {
   const options: ApexOptions = {
-    colors: ["#5750F1"],
+    colors: ["#0B8FAC"],
     chart: {
       fontFamily: "Satoshi, sans-serif",
       type: "bar",
