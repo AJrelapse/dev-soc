@@ -27,6 +27,12 @@ export const NAV_DATA = [
           },
         ],
       },
+      {
+        title: "EXC Attendance",
+        url: "/attendance",
+        icon: Icons.Authentication,
+        items: [],
+      },
     ],
   },
   {
